@@ -13,3 +13,4 @@ pytracking/evaluation/local.py
 pytracking/run_local.py
 workspace*
 .vscode/
+*.log
