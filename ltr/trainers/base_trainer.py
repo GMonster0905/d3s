@@ -90,14 +90,14 @@ class BaseTrainer:
 
     def save_checkpoint(self):
         """Saves a checkpoint of the network and other variables."""
-
+        net = self.actor.net.module if multigpu.is_multi_gpu(self.actor.net) else self.actor.net
         actor_type = type(self.actor).__name__
-        net_type = type(self.actor.net).__name__
+        net_type = type(net).__name__
         state = {
             'epoch': self.epoch,
             'actor_type': actor_type,
             'net_type': net_type,
-            'net': self.actor.net.state_dict(),
+            'net': net.state_dict(),
             'net_info': getattr(self.actor.net, 'info', None),
             'constructor': getattr(self.actor.net, 'constructor', None),
             'optimizer': self.optimizer.state_dict(),
