@@ -10,19 +10,21 @@ import ltr.models.segm.segm as segm_models
 from ltr import actors
 from ltr.trainers import LTRTrainer
 import ltr.data.transforms as dltransforms
+from ltr import MultiGPU
 
 
 def run(settings):
     # Most common settings are assigned in the settings struct
     settings.description = 'SegmentationNet with default settings.'
     settings.print_interval = 1  # How often to print loss and other info
-    settings.batch_size = 64  # Batch size
-    settings.num_workers = 1  # Number of workers for image loading
+    settings.batch_size = 256  # Batch size
+    settings.num_workers = 8 # Number of workers for image loading
     settings.normalize_mean = [0.485, 0.456, 0.406]  # Normalize mean (default pytorch ImageNet values)
     settings.normalize_std = [0.229, 0.224, 0.225]  # Normalize std (default pytorch ImageNet values)
     settings.search_area_factor = 4.0  # Image patch size relative to target size
     settings.feature_sz = 24  # Size of feature map
     settings.output_sz = settings.feature_sz * 16  # Size of input image patches
+    settings.multi_gpu = True
 
     # Settings for the image sample and proposal generation
     settings.center_jitter_factor = {'train': 0, 'test': 1.5}
@@ -107,6 +109,9 @@ def run(settings):
 
     # Set objective
     objective = nn.BCEWithLogitsLoss()
+
+    if settings.multi_gpu:
+        net = MultiGPU(net, dim=0)
 
     # Create actor, which wraps network and objective
     actor = actors.SegmActor(net=net, objective=objective)

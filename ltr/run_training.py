@@ -55,5 +55,6 @@ def main():
 
 
 if __name__ == '__main__':
+    os.environ["CUDA_VISIBLE_DEVICES"] = "2, 3"
     multiprocessing.set_start_method('spawn', force=True)
     main()

@@ -28,7 +28,7 @@ class Vos(BaseDataset):
                     vid_ids or split option can be used at a time.
         """
         root = env_settings().vos_dir if root is None else root
-        root = os.path.join(root, "valid" if split=="val" else "train")
+        # root = os.path.join(root, "valid" if split=="val" else "train")
         super().__init__(root, image_loader)
         self.split = split
         self.sequence_list = self._build_sequence_list(vid_ids, split)

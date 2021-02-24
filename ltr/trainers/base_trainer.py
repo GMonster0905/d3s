@@ -1,7 +1,7 @@
 import os
 import glob
 import torch
-from ltr.admin import loading
+from ltr.admin import loading, multigpu
 
 
 class BaseTrainer:
@@ -125,9 +125,9 @@ class BaseTrainer:
             load_checkpoint(path_to_checkpoint):
                 Loads the file from the given absolute path (str).
         """
-
+        net = self.actor.net.module if multigpu.is_multi_gpu(self.actor.net) else self.actor.net
         actor_type = type(self.actor).__name__
-        net_type = type(self.actor.net).__name__
+        net_type = type(net).__name__
 
         if checkpoint is None:
             # Load most recent checkpoint
@@ -136,6 +136,8 @@ class BaseTrainer:
             if checkpoint_list:
                 checkpoint_path = checkpoint_list[-1]
             else:
+                print('{}/{}/{}_ep*.pth.tar'.format(self._checkpoint_dir,
+                                                                             self.settings.project_path, net_type))
                 print('No matching checkpoint file found')
                 return
         elif isinstance(checkpoint, int):
@@ -166,7 +168,7 @@ class BaseTrainer:
             if key in ignore_fields:
                 continue
             if key == 'net':
-                self.actor.net.load_state_dict(checkpoint_dict[key])
+                net.load_state_dict(checkpoint_dict[key])
             elif key == 'optimizer':
                 self.optimizer.load_state_dict(checkpoint_dict[key])
             else:
