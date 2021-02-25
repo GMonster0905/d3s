@@ -7,7 +7,10 @@ class TensorList(list):
 
     def __init__(self, list_of_tensors = list()):
         super(TensorList, self).__init__(list_of_tensors)
-
+    
+    def list(self):
+        return list(self)
+    
     def __getitem__(self, item):
         if isinstance(item, int):
             return super(TensorList, self).__getitem__(item)
