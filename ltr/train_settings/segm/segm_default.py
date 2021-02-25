@@ -18,7 +18,7 @@ def run(settings):
     settings.description = 'SegmentationNet with default settings.'
     settings.print_interval = 1  # How often to print loss and other info
     settings.batch_size = 256  # Batch size
-    setting.batch_num = 64 # sample_per_epoch = n*batch_num
+    settings.batch_num = 64 # sample_per_epoch = n*batch_num
     settings.num_workers = 8 # Number of workers for image loading
     settings.normalize_mean = [0.485, 0.456, 0.406]  # Normalize mean (default pytorch ImageNet values)
     settings.normalize_std = [0.229, 0.224, 0.225]  # Normalize std (default pytorch ImageNet values)
