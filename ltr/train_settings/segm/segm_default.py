@@ -18,6 +18,7 @@ def run(settings):
     settings.description = 'SegmentationNet with default settings.'
     settings.print_interval = 1  # How often to print loss and other info
     settings.batch_size = 256  # Batch size
+    setting.batch_num = 64 # sample_per_epoch = n*batch_num
     settings.num_workers = 8 # Number of workers for image loading
     settings.normalize_mean = [0.485, 0.456, 0.406]  # Normalize mean (default pytorch ImageNet values)
     settings.normalize_std = [0.229, 0.224, 0.225]  # Normalize std (default pytorch ImageNet values)
@@ -85,7 +86,7 @@ def run(settings):
 
     # The sampler for training
     dataset_train = segm_sampler.SegmSampler([vos_train], [1],
-                                             samples_per_epoch=1000 * settings.batch_size, max_gap=50,
+                                             samples_per_epoch=1000 * settings.batch_num, max_gap=50,
                                              processing=data_processing_train)
 
     # The loader for training
@@ -94,7 +95,7 @@ def run(settings):
                              shuffle=True, drop_last=True, stack_dim=1)
 
     # # The sampler for validation
-    dataset_val = segm_sampler.SegmSampler([vos_val], [1], samples_per_epoch=10 * settings.batch_size, max_gap=50,
+    dataset_val = segm_sampler.SegmSampler([vos_val], [1], samples_per_epoch=10 * settings.batch_num, max_gap=50,
                                            processing=data_processing_val)
 
     # # The loader for validation
